@@ -1,0 +1,5 @@
+/Users/sirwilson2002/Documents/coding/web-chat/WebChat.Backend/WebChat.Infrastructure/obj/Debug/net10.0/WebChat.Infrastructure.csproj.AssemblyReference.cache
+/Users/sirwilson2002/Documents/coding/web-chat/WebChat.Backend/WebChat.Infrastructure/obj/Debug/net10.0/WebChat.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sirwilson2002/Documents/coding/web-chat/WebChat.Backend/WebChat.Infrastructure/obj/Debug/net10.0/WebChat.Infrastructure.AssemblyInfoInputs.cache
+/Users/sirwilson2002/Documents/coding/web-chat/WebChat.Backend/WebChat.Infrastructure/obj/Debug/net10.0/WebChat.Infrastructure.AssemblyInfo.cs
+/Users/sirwilson2002/Documents/coding/web-chat/WebChat.Backend/WebChat.Infrastructure/obj/Debug/net10.0/WebChat.Infrastructure.csproj.CoreCompileInputs.cache
