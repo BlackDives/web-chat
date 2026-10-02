@@ -1,6 +1,6 @@
-using web_api.Utils;
+using WebChat.Shared.Common;
 
-namespace web_api.Services.Auth;
+namespace WebChat.Service.Services.Auth;
 
 public interface ILoginService
 {

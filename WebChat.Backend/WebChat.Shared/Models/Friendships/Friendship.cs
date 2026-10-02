@@ -11,5 +11,6 @@ public class Friendship
     public Guid ReceiverId { get; set; }
     public User Receiver { get; set; }
     public FriendshipStatusEnum FriendshipStatus { get; set; }
-    public DateTimeOffset ReceivedOn { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }

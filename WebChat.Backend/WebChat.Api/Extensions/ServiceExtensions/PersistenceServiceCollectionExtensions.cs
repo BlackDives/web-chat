@@ -21,8 +21,7 @@ internal static class PersistenceServiceCollectionExtensions
     {
         services.AddIdentityCore<ApplicationUser>()
             .AddRoles<Role>()
-            .AddEntityFrameworkStores<WebChatDbContext>()
-            .AddSignInManager<ApplicationUser>();
+            .AddEntityFrameworkStores<WebChatDbContext>();
         
         return services;
     }

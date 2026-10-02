@@ -2,9 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using web_api.Dtos;
 using web_api.Dtos.Messages;
-using web_api.ServiceMessages.Channel;
-using web_api.Services.Channels;
-using web_api.Services.Messages;
+using WebChat.Service.Services.Channels;
+using WebChat.Service.Services.Messages;
 
 namespace WebChat.Api.Controllers;
 
@@ -30,24 +29,14 @@ public class ChannelController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ChannelDTO>> GetChannel([FromRoute] string id)
     {
-        var result = await _channelService.GetChannelById(Guid.Parse(id));
-        if (!result.Success)
-        {
-            if (result.Error.Equals(ChannelServiceErrorMessage.ChannelNotFound.Value))
-            {
-                return StatusCode(StatusCodes.Status404NotFound, ChannelServiceErrorMessage.ChannelNotFound.Value);
-            }
-        }
-        
-        return Ok(result.Value);
+        throw new NotImplementedException();
     }
 
     [Authorize]
     [HttpGet("{id}/messages")]
     public async Task<ActionResult<List<MessageDTO>>> GetChannelMessagesByChannelId([FromRoute] string id)
     {
-        var results = await _messageService.GetMessagesByChannelId(Guid.Parse(id));
-        return Ok(results.Value);
+        throw new NotImplementedException();
     }
 
     [Authorize]
@@ -55,23 +44,13 @@ public class ChannelController : ControllerBase
     public async Task<ActionResult<MessageDTO>> CreateNewChannelMessage([FromBody] NewMessageDTO message,
         [FromRoute] string id)
     {
-        var result = await _messageService.CreateMessage(message);
-        
-        return Ok(result.Value);
+        throw new NotImplementedException();
     }
 
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteChannelById([FromRoute] string id)
     {
-        var channelId = Guid.Parse(id);
-        var results = await _channelService.DeleteChannelById(channelId);
-
-        if (!results.Success)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
-        
-        return Ok(results.Value);
+        throw new NotImplementedException();
     }
 }

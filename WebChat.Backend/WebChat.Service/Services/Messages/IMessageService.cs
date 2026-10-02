@@ -1,13 +1,14 @@
-using web_api.Dtos.Messages;
-using web_api.Utils;
 
-namespace web_api.Services.Messages;
+
+using WebChat.Shared.Common;
+using WebChat.Shared.Models.Messages;
+
+namespace WebChat.Service.Services.Messages;
 
 public interface IMessageService
 {
-    public Task<Result<List<MessageDTO>>> GetMessagesByChannelId(Guid channelId);
-    public Task<Result<MessageDTO>> GetMessageById(Guid id);
-    public Task<Result<string>> DeleteMessageById(Guid id);
-    public Task<Result<MessageDTO>> CreateMessage(NewMessageDTO
-        message);
+    public Task<Result<Message>> CreateMessageAsync(MessageToCreate newMessage);
+    public Task<Result<PagedResult<Message>>> GetMessagesByChannelIdAsync(Guid channelId);
+    public Task<Result<Message>> GetMessageByIdAsync(Guid id);
+    public Task<Result<bool>> DeleteMessageByIdAsync(Guid id);
 }

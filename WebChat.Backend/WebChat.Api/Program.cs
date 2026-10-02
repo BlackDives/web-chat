@@ -12,7 +12,7 @@ var configuration = builder.Configuration;
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
-builder.Services.Configure<GoogleAuthConfig>(builder.Configuration.GetSection("Google"));
+//builder.Services.Configure<GoogleAuthConfig>(builder.Configuration.GetSection("Google"));
 builder.Services.AddSingleton<JsonWebTokenHandler>();
 builder.Services.AddAppServices();
 builder.Services.AddAppRepositories();
@@ -21,6 +21,7 @@ builder.Services.AddAppAuthentication(configuration);
 builder.Services.AddPersistence(configuration);
 builder.Services.AddAppIdentity();
 builder.Services.AddAppCors();
+builder.Services.AddHttpClient();
 
 
 var app = builder.Build();
@@ -29,9 +30,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    using var scope = app.Services.CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<WebChatDbContext>();
-    dbContext.Database.Migrate();
+    //using var scope = app.Services.CreateScope();
+    //var dbContext = scope.ServiceProvider.GetRequiredService<WebChatDbContext>();
+    //dbContext.Database.Migrate();
     app.UseCors(CorsPolicies.WebChatCorsPolicy);
 }
 

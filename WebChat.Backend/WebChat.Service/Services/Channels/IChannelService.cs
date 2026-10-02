@@ -1,16 +1,12 @@
-using web_api.Data;
-using web_api.Dtos;
-using web_api.Utils;
+using WebChat.Shared.Common;
+using WebChat.Shared.Models.Channels;
 
-namespace web_api.Services.Channels;
+namespace WebChat.Service.Services.Channels;
 
 public interface IChannelService
 {
-    Task<List<ChannelDTO>> GetChannelsByServerId(Guid serverId);
-    Task<Result<ChannelDTO>> GetChannelById(Guid channelId);
-    Task<Channel> AddServerChannel(Guid serverId, ChannelDTO channel);
-
-    Task<Result<string>> RemoveChannelMessagesByChannelId(Guid channelId);
-    
-    Task<Result<string>> DeleteChannelById(Guid serverId);
+    Task<Result<Channel>> CreateChannelAsync(ChannelToCreate channelToCreate);
+    Task<Result<Channel>> GetChannelByIdAsync(Guid channelId);
+    Task<Result<List<Channel>>> GetChannelsByServerIdAsync(Guid serverId);
+    Task<Result<bool>> DeleteChannelByIdAsync(Guid channelId);
 }

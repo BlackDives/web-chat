@@ -1,9 +1,9 @@
-using web_api.Dtos.Auth;
-using web_api.Utils;
+using WebChat.Shared.Common;
+using WebChat.Shared.Models.Auth;
 
-namespace web_api.Services.Auth;
+namespace WebChat.Service.Services.Auth;
 
 public interface IRegisterService
 {
-    Task<Result<string>> CreateUser(UserRegisterDto userRegisterDto);
+    Task<Result<LoginUser>> CreateUser(RegisteredUser newUser);
 }

@@ -1,4 +1,4 @@
-namespace web_api.Models;
+namespace WebChat.Shared.Models.Auth;
 
 public class LoginUser
 {

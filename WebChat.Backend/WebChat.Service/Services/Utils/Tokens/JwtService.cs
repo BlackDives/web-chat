@@ -56,8 +56,7 @@ public class JwtService : IJwtService
         var claims = new Dictionary<string, object>
         {
             { JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString() },
-            { JwtRegisteredClaimNames.UniqueName, googleClaims.Username },
-            { JwtRegisteredClaimNames.Email, googleClaims.Email },
+            { JwtRegisteredClaimNames.UniqueName, googleClaims.Email },
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -71,9 +70,9 @@ public class JwtService : IJwtService
         };
         
         var unsignedToken = _tokenHandler.CreateToken(tokenDescriptor);
-        var signedToken = _tokenHandler.CreateToken(unsignedToken, credentials);
+        //var signedToken = _tokenHandler.CreateToken(unsignedToken, credentials);
         
-        return new JsonWebToken(signedToken);
+        return new JsonWebToken(unsignedToken);
     }
     public async Task<JsonWebToken> GenerateRefreshTokenAsync(User user)
     {

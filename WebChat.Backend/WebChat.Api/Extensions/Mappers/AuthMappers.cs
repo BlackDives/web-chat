@@ -34,4 +34,13 @@ internal static class AuthMappers
             Email = user.Email,
         };
     }
+    public static CompletedUserProfile ToModel(this CompletedUserProfileDto completedProfile)
+    {
+        return new()
+        {
+            Username = completedProfile.Username,
+            FirstName = completedProfile.FirstName,
+            LastName = completedProfile.LastName,
+        };
+    }
 }

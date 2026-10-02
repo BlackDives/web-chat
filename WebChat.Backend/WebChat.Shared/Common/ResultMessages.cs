@@ -10,6 +10,8 @@ public record ResultMessage
     }
     
     public static ResultMessage UserNotFound = new("User not found");
+    public static ResultMessage UsernameTaken = new("Username already taken");
+    public static ResultMessage EmailNotFoundInToken = new ("Email not found in token");
     
     public static implicit operator string(ResultMessage result) => result.Message;
 }
