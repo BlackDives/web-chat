@@ -27,6 +27,6 @@ dist-ssr
 
 # .NET things
 appsettings.Development.json
-/bin
-/obj 
+bin/
+obj/ 
 *.user
