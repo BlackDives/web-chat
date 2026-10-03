@@ -1,19 +1,20 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Webchat.Service.Services.Utils.Tokens;
 
 namespace WebChat.Api.Controllers;
 
 [Route("api/users")]
 public class UsersController : ControllerBase
 {
-    public UsersController()
+    private readonly IJwtService _jwtService;
+    public UsersController(IJwtService jwtService)
     {
-        
+        _jwtService = jwtService;
     }
 
     [HttpGet("me")]
-    [Authorize]
-    public IActionResult GetCurrentUser()
+    public async Task<IActionResult> GetCurrentUser()
     {
         /*
          * 1. Get access and refresh token
@@ -23,6 +24,18 @@ public class UsersController : ControllerBase
          * 5. if both existing and expired -> return a 401
          */
         
-        throw new NotImplementedException();
+        if (!Request.Cookies.TryGetValue("AccessToken", out var accessToken))
+        {
+            return Unauthorized("No access token.");
+        }
+        
+        var tokenIsExpired = await _jwtService.IsTokenExpiredAsync(accessToken);
+        if (tokenIsExpired)
+        {
+            var yo = 2;
+            return RedirectToAction(nameof(AuthenticationController.RefreshToken), "Authentication");
+        }
+        
+        return Ok();
     }
 }

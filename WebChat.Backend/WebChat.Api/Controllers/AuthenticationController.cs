@@ -7,6 +7,9 @@ using WebChat.Api.Dtos.Auth;
 using WebChat.Api.Policies;
 using WebChat.Service.Services.Auth;
 using WebChat.Api.Extensions.Mappers;
+using WebChat.Service.Services.Auth.Interfaces;
+using WebChat.Service.Services.Users;
+using Webchat.Service.Services.Utils.Tokens;
 
 namespace WebChat.Api.Controllers;
 
@@ -18,18 +21,27 @@ public class AuthenticationController : ControllerBase
     private readonly ICompleteProfileService _completeProfileService;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
+    private readonly IJwtService  _jwtService;
+    private readonly IRefreshTokenService _refreshTokenService;
+    private readonly IUserService _userService;
     
     public AuthenticationController(
         IGoogleAuthService googleAuthService, 
         ICompleteProfileService completeProfileService, 
         IHttpClientFactory httpClientFactory,
-        IConfiguration configuration
+        IConfiguration configuration,
+        IJwtService jwtService,
+        IRefreshTokenService refreshTokenService,
+        IUserService userService
         )
     {
         _googleAuthService = googleAuthService;
         _completeProfileService = completeProfileService;
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
+        _jwtService = jwtService;
+        _refreshTokenService = refreshTokenService;
+        _userService = userService;
     }
     
     [HttpGet("google/login")]
@@ -197,7 +209,74 @@ public class AuthenticationController : ControllerBase
             Path = "/api/auth/refresh"
         });
         
+        Response.Cookies.Delete("CompleteProfileToken");
+        
         return Created("http://localhost:5173", "");
+    }
+    
+    [HttpGet("complete-profile")]
+    public async Task<IActionResult> GetCurrentProfileCompletionStateAsync()
+    {
+        if (!Request.Cookies.TryGetValue("CompleteProfileToken", out var completeProfileToken))
+        {
+            return Unauthorized();
+        }
+
+        return Ok();
+    }
+
+    [HttpGet("refresh")]
+    public async Task<IActionResult> RefreshToken()
+    {
+        if (!Request.Cookies.TryGetValue("AccessToken", out var accessToken))
+        {
+            return Unauthorized();
+        }
+        
+        if (!Request.Cookies.TryGetValue("RefreshToken", out var refreshToken))
+        {
+            var accessTokenClaimsResult = _jwtService.GetAccessTokenClaims(accessToken);
+            var accessTokenClaims = accessTokenClaimsResult.Value;
+            var existingRefreshToken = await _refreshTokenService.GetRefreshTokenByUserIdAsync(accessTokenClaims.UserId);
+            
+            if (!existingRefreshToken.Success)
+            {
+                return Unauthorized();
+            }
+            
+            var refreshTokenExpired = await _jwtService.IsTokenExpiredAsync(existingRefreshToken.Value.Token);
+            if (refreshTokenExpired)
+            {
+                Response.Cookies.Delete("RefreshToken");
+                return Unauthorized();
+            }
+            
+            var user = await _userService.FindUserByIdAsync(accessTokenClaims.UserId);
+            var newAccessToken = _jwtService.GenerateAccessToken(user.Value);
+            
+            Response.Cookies.Append("AccessToken", newAccessToken.EncodedToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+            });
+
+            return Ok();
+        }
+        
+        var refreshTokenClaimsResult = _jwtService.GetRefreshTokenClaims(refreshToken);
+        var refreshTokenClaims = refreshTokenClaimsResult.Value;
+        var fetchedUser = await _userService.FindUserByEmailAsync(refreshTokenClaims.Email);
+        var refreshedAccessToken = _jwtService.GenerateAccessToken(fetchedUser.Value);
+        
+        Response.Cookies.Append("AccessToken", refreshedAccessToken.EncodedToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+        });
+
+        return Ok();
     }
     
 }

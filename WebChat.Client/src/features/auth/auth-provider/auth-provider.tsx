@@ -26,7 +26,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         accessToken: '',
     })
 
-    useEffect(() => {}, [])
+    useEffect(() => {
+        axios
+            .get('http://localhost:5003/api/users/me', {
+                withCredentials: true,
+            })
+            .then((data) => {
+                console.log(data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }, [])
 
     const fetchUserDetails = async () => {
         try {

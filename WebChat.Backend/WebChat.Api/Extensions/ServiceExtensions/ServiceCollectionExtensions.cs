@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using web_api.Services;
 using WebChat.Infrastructure.DataAccess.Repositories.Channels;
 using WebChat.Infrastructure.DataAccess.Repositories.Friendships;
 using WebChat.Infrastructure.DataAccess.Repositories.Messages;
@@ -21,7 +20,6 @@ internal static class WebChatServiceCollectionExtensions
     {
         services.AddScoped<IRegisterService, RegisterService>();
         services.AddScoped<ILoginService, LoginService>();
-        services.AddScoped<IPasswordHash, PasswordHash>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<ISpacesService, SpacesService>();
         services.AddScoped<IChannelService, ChannelService>();

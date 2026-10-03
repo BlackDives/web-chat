@@ -14,8 +14,9 @@ import {
     FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import CompleteProfileGuard from '@/features/auth/auth-provider/complete-profile-guard'
 import { zodResolver } from '@hookform/resolvers/zod'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import z from 'zod'
@@ -59,116 +60,120 @@ const CompleteProfile = () => {
         } catch (error) {}
     }
     return (
-        <AuthLayout>
-            <div className="w-full h-full flex flex-col">
-                <div className="flex flex-col">
-                    <form
-                        id="complete-profile-form"
-                        onSubmit={form.handleSubmit(onFormSubmit)}
-                    >
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Complete your profile!</CardTitle>
-                                <CardDescription>
-                                    Fill out the fields to complete your WebChat
-                                    account creation.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <FieldGroup>
-                                    <Controller
-                                        name="username"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field>
-                                                <FieldLabel>
-                                                    Username
-                                                </FieldLabel>
-                                                <Input
-                                                    {...field}
-                                                    aria-invalid={
-                                                        fieldState.invalid
-                                                    }
-                                                    placeholder="Enter username..."
-                                                    autoComplete="off"
-                                                />
-                                                {fieldState.invalid && (
-                                                    <FieldError
-                                                        errors={[
-                                                            fieldState.error,
-                                                        ]}
+        <CompleteProfileGuard>
+            <AuthLayout>
+                <div className="w-full h-full flex flex-col">
+                    <div className="flex flex-col">
+                        <form
+                            id="complete-profile-form"
+                            onSubmit={form.handleSubmit(onFormSubmit)}
+                        >
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>
+                                        Complete your profile!
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Fill out the fields to complete your
+                                        WebChat account creation.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <FieldGroup>
+                                        <Controller
+                                            name="username"
+                                            control={form.control}
+                                            render={({ field, fieldState }) => (
+                                                <Field>
+                                                    <FieldLabel>
+                                                        Username
+                                                    </FieldLabel>
+                                                    <Input
+                                                        {...field}
+                                                        aria-invalid={
+                                                            fieldState.invalid
+                                                        }
+                                                        placeholder="Enter username..."
+                                                        autoComplete="off"
                                                     />
-                                                )}
-                                            </Field>
-                                        )}
-                                    />
-                                    <Controller
-                                        name="firstName"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field>
-                                                <FieldLabel>
-                                                    First Name
-                                                </FieldLabel>
-                                                <Input
-                                                    {...field}
-                                                    aria-invalid={
-                                                        fieldState.invalid
-                                                    }
-                                                    placeholder="Enter first name..."
-                                                    autoComplete="off"
-                                                />
-                                                {fieldState.invalid && (
-                                                    <FieldError
-                                                        errors={[
-                                                            fieldState.error,
-                                                        ]}
+                                                    {fieldState.invalid && (
+                                                        <FieldError
+                                                            errors={[
+                                                                fieldState.error,
+                                                            ]}
+                                                        />
+                                                    )}
+                                                </Field>
+                                            )}
+                                        />
+                                        <Controller
+                                            name="firstName"
+                                            control={form.control}
+                                            render={({ field, fieldState }) => (
+                                                <Field>
+                                                    <FieldLabel>
+                                                        First Name
+                                                    </FieldLabel>
+                                                    <Input
+                                                        {...field}
+                                                        aria-invalid={
+                                                            fieldState.invalid
+                                                        }
+                                                        placeholder="Enter first name..."
+                                                        autoComplete="off"
                                                     />
-                                                )}
-                                            </Field>
-                                        )}
-                                    />
-                                    <Controller
-                                        name="lastName"
-                                        control={form.control}
-                                        render={({ field, fieldState }) => (
-                                            <Field>
-                                                <FieldLabel>
-                                                    Last Name
-                                                </FieldLabel>
-                                                <Input
-                                                    {...field}
-                                                    aria-invalid={
-                                                        fieldState.invalid
-                                                    }
-                                                    placeholder="Enter last name..."
-                                                    autoComplete="off"
-                                                />
-                                                {fieldState.invalid && (
-                                                    <FieldError
-                                                        errors={[
-                                                            fieldState.error,
-                                                        ]}
+                                                    {fieldState.invalid && (
+                                                        <FieldError
+                                                            errors={[
+                                                                fieldState.error,
+                                                            ]}
+                                                        />
+                                                    )}
+                                                </Field>
+                                            )}
+                                        />
+                                        <Controller
+                                            name="lastName"
+                                            control={form.control}
+                                            render={({ field, fieldState }) => (
+                                                <Field>
+                                                    <FieldLabel>
+                                                        Last Name
+                                                    </FieldLabel>
+                                                    <Input
+                                                        {...field}
+                                                        aria-invalid={
+                                                            fieldState.invalid
+                                                        }
+                                                        placeholder="Enter last name..."
+                                                        autoComplete="off"
                                                     />
-                                                )}
-                                            </Field>
-                                        )}
-                                    />
-                                </FieldGroup>
-                                <div>
-                                    <Button
-                                        type="submit"
-                                        form="complete-profile-form"
-                                    >
-                                        Complete Profile
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </form>
+                                                    {fieldState.invalid && (
+                                                        <FieldError
+                                                            errors={[
+                                                                fieldState.error,
+                                                            ]}
+                                                        />
+                                                    )}
+                                                </Field>
+                                            )}
+                                        />
+                                    </FieldGroup>
+                                    <div>
+                                        <Button
+                                            type="submit"
+                                            form="complete-profile-form"
+                                        >
+                                            Complete Profile
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </AuthLayout>
+            </AuthLayout>
+        </CompleteProfileGuard>
     )
 }
 

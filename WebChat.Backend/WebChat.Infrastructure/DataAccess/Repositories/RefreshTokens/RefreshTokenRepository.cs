@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using WebChat.Shared.Models.Auth;
-using WebChat.Shared.Models.Users;
 using WebChat.Infrastructure.DataAccess.Mappers;
 
 namespace WebChat.Infrastructure.DataAccess.Repositories.RefreshTokens;

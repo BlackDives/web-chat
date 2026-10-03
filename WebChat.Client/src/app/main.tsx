@@ -7,6 +7,7 @@ import Login from './routes/auth/login.tsx'
 import Signup from './routes/auth/signup.tsx'
 import './index.css'
 import CompleteProfile from './routes/auth/complete-profile.tsx'
+import Home from './routes/app/home/home.tsx'
 
 const router = createBrowserRouter([
     {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
                         Component: CompleteProfile,
                     },
                 ],
+            },
+            {
+                path: '/home',
+                Component: Home,
             },
         ],
     },
