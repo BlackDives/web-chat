@@ -154,11 +154,12 @@ public class AuthenticationController : ControllerBase
             var res = new { CompleteProfileToken = completeProfileToken.CompleteProfileToken };
             var serializedResponse = JsonSerializer.Serialize(res);
             
-            Response.Cookies.Append("completeProfileToken", completeProfileToken.CompleteProfileToken, new CookieOptions
+            Response.Cookies.Append("CompleteProfileToken", completeProfileToken.CompleteProfileToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true, // Required if SameSite=None
-                SameSite = SameSiteMode.Lax, // Or SameSiteMode.None for cross-site
+                Secure = false, // Required if SameSite=None
+                SameSite = SameSiteMode.Lax,
+                Path = "/api/auth/complete-profile"
             });
             
             return Redirect("http://localhost:5173/auth/complete-profile");
@@ -173,7 +174,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("complete-profile")]
     public async Task<IActionResult> CompleteProfile([FromBody] CompletedUserProfileDto completedUserProfile)
     {
-        if (!Request.Cookies.TryGetValue("CompleteProfile", out var completeProfileToken))
+        if (!Request.Cookies.TryGetValue("CompleteProfileToken", out var completeProfileToken))
         {
             return RedirectToAction("http://localhost:5173/auth/login");
         }

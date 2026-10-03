@@ -20,12 +20,13 @@ public class JwtService : IJwtService
     
     public JsonWebToken GenerateAccessToken(User user)
     {
-        double expiresMinutes = _configuration.GetSection("JwtConfiguration:AccessToken:TokenValidityMins").Get<double>();
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfiguration:AccessToken:Key"]));
+        double expiresMinutes = _configuration.GetSection("JwtConfiguration:Access:TokenValidityMins").Get<double>();
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfiguration:Access:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         
         var claims = new Dictionary<string, object>
         {
+            {JwtRegisteredClaimNames.Typ, "at+jwt" },
             { JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString() },
             { JwtRegisteredClaimNames.UniqueName, user.Username },
             { JwtRegisteredClaimNames.Email, user.Email },
@@ -42,9 +43,8 @@ public class JwtService : IJwtService
         };
         
         var unsignedToken = _tokenHandler.CreateToken(tokenDescriptor);
-        var signedToken = _tokenHandler.CreateToken(unsignedToken, credentials);
         
-        return new JsonWebToken(signedToken);
+        return new JsonWebToken(unsignedToken);
     }
 
     public JsonWebToken GenerateProfileCompletionToken(GoogleProfileCompleteClaims googleClaims)
@@ -76,7 +76,31 @@ public class JwtService : IJwtService
     }
     public async Task<JsonWebToken> GenerateRefreshTokenAsync(User user)
     {
-        throw new NotImplementedException();
+        double expiresMinutes = _configuration.GetSection("JwtConfiguration:Refresh:TokenValidityMins").Get<double>();
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfiguration:Refresh:Key"]));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        
+        var claims = new Dictionary<string, object>
+        {
+            {JwtRegisteredClaimNames.Typ, "rt+jwt" },
+            { JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString() },
+            { JwtRegisteredClaimNames.UniqueName, user.Username },
+            { JwtRegisteredClaimNames.Email, user.Email },
+        };
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Audience = _configuration["JwtConfiguration:Audience"],
+            Issuer = _configuration["JwtConfiguration:Issuer"],
+            Claims = claims,
+            IssuedAt = DateTime.UtcNow,
+            Expires = DateTime.UtcNow.AddMinutes(expiresMinutes),
+            SigningCredentials = credentials
+        };
+        
+        var unsignedToken = _tokenHandler.CreateToken(tokenDescriptor);
+        
+        return new JsonWebToken(unsignedToken);
     }
 
     public async Task<JsonWebToken> RefreshAccessTokenAsync(User user)

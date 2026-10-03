@@ -1,15 +1,13 @@
-import { useState } from 'react'
-
 type AuthLayoutProps = {
     children: React.ReactNode
-    title: string
 }
 
-const AuthLayout = ({ children, title }: AuthLayoutProps) => {
+const AuthLayout = ({ children }: AuthLayoutProps) => {
     return (
-        <div>
-            <p>{title}</p>
-            <div>{children}</div>
+        <div className="w-full h-[100dvh]">
+            <div className="max-w-7xl h-full px-8 py-6 flex flex-col mx-auto">
+                {children}
+            </div>
         </div>
     )
 }

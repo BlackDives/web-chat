@@ -31,10 +31,18 @@ public class UserRepository : IUserRepository
         return results;
     }
 
+    public async Task<User?> FindUserByUsernameAsync(string username)
+    {
+        var query = await _userManager.FindByNameAsync(username);
+        var results = query?.ToModel();
+        
+        return results;
+    }
+
     public async Task<User> CreateUserAsync(User user)
     {
         var mappedUser = user.ToEntity();
-        await _userManager.CreateAsync(mappedUser);
+        var res = await _userManager.CreateAsync(mappedUser);
 
         return user;
     }

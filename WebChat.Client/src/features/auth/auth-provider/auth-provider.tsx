@@ -26,23 +26,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         accessToken: '',
     })
 
-    useEffect(() => {
-        fetchUserDetails()
-            .then((data) => {
-                setUser(data)
-                setIsAuthenticated(true)
-            })
-            .catch(() => {
-                setUser(null)
-                setIsAuthenticated(false)
-                navigate('/auth/login')
-            })
-    }, [])
+    useEffect(() => {}, [])
 
     const fetchUserDetails = async () => {
         try {
             const response = await axios.get('http://localhost:5003/user/me')
-            const user = response.value
 
             return response
         } catch (error) {}

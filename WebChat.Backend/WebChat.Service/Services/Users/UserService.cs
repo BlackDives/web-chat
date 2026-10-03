@@ -27,9 +27,15 @@ public class UserService : IUserService
         return Result<User>.Ok(user);
     }
 
-    public async Task<Result<User>> FindUserByUsernameAsync(string username)
+    public async Task<Result<User?>> FindUserByUsernameAsync(string username)
     {
-        throw new NotImplementedException();
+        var user = await _usersRepository.FindUserByUsernameAsync(username);
+        if (user == null)
+        {
+            return Result<User?>.Fail(ResultMessage.UserNotFound, ServiceErrorEnum.NotFound);
+        }
+        
+        return Result<User>.Ok(user);
     }
 
     public async Task<Result<User>> FindUserByEmailAsync(string email)

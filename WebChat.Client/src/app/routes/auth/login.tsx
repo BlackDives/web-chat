@@ -3,7 +3,8 @@ import LoginForm from '@/features/auth/login/login-form'
 
 const Login = () => {
     return (
-        <AuthLayout title="login">
+        <AuthLayout>
+            <p>Login</p>
             <LoginForm />
         </AuthLayout>
     )

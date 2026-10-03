@@ -33,7 +33,7 @@ if (app.Environment.IsDevelopment())
     //using var scope = app.Services.CreateScope();
     //var dbContext = scope.ServiceProvider.GetRequiredService<WebChatDbContext>();
     //dbContext.Database.Migrate();
-    app.UseCors(CorsPolicies.WebChatCorsPolicy);
+    app.UseCors(CorsPolicies.DevelopmentCorsPolicy);
 }
 
 app.MapControllers();

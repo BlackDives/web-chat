@@ -27,14 +27,14 @@ public class CompleteProfileService : ICompleteProfileService
     public async Task<Result<AuthenticatedUser?>> CompleteUserCreationAsync(CompletedUserProfile completedUserProfile, string completeProfileToken)
     {
         var parsedToken = _jwtSecurityTokenHandler.ReadJwtToken(completeProfileToken);
-        var userEmail = parsedToken.Claims.FirstOrDefault(c => c.Type.ToLower() == "email");
+        var userEmail = parsedToken.Claims.FirstOrDefault(c => c.Type.ToLower() == "unique_name")?.Value;
         var userResult = await _userService.FindUserByUsernameAsync(completedUserProfile.Username);
         if (userResult.Success)
         {
             return Result<AuthenticatedUser?>.Fail(ResultMessage.UsernameTaken, ServiceErrorEnum.Conflict);
         }
 
-        var createdUserResult = await _userService.CreateUserAsync(completedUserProfile, userEmail.Value);
+        var createdUserResult = await _userService.CreateUserAsync(completedUserProfile, userEmail);
 
         if (!createdUserResult.Success)
         {

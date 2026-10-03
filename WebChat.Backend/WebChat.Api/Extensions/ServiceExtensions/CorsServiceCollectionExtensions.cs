@@ -10,7 +10,8 @@ internal static class CorsServiceCollectionExtensions
         {
             options.AddPolicy(CorsPolicies.DevelopmentCorsPolicy, policy =>
             {
-                policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                policy.WithOrigins(["http://localhost:5173", "https://localhost:5173"]);
+                policy.AllowAnyMethod().AllowAnyHeader().AllowCredentials();
             });
             
             options.AddPolicy(CorsPolicies.WebChatCorsPolicy, policy =>

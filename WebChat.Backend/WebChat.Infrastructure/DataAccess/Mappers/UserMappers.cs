@@ -28,6 +28,16 @@ internal static class UserMappers
         return new ApplicationUser
         {
             Id = user.Id,
+            UserName = user.Username,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            ProfilePictureUrl = user.ProfilePictureUrl,
+            EnableNotifications = user.EnabledNotifications,
+            DateOfBirth = user.DateOfBirth,
+            CreatedAt = user.CreatedAt,
+            UpdatedAt = user.UpdatedAt,
         };
     }
 }
