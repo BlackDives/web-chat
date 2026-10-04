@@ -1,5 +1,4 @@
 import { useState, createContext, useEffect } from 'react'
-import { useNavigate } from 'react-router'
 import axios from 'axios'
 
 export type AuthProviderProps = {
@@ -19,12 +18,11 @@ export type AuthenticatedUser = {
 
 export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated'
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<AuthenticatedUser | null>(null)
     const [status, setStatus] = useState<AuthStatus>('loading')
-    const navigate = useNavigate()
 
     useEffect(() => {
         axios
@@ -32,17 +30,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                 withCredentials: true,
             })
             .then((res) => {
-                console.log(res)
                 const data: AuthenticatedUser = res.data
                 setUser(data)
+                setStatus('authenticated')
             })
             .catch((err) => {
                 console.log(err)
                 if (axios.isAxiosError(err)) {
                     if (err.response?.status === 401) {
                         setUser(null)
-                        setStatus('authenticated')
-                        navigate('/auth/login')
+                        setStatus('unauthenticated')
                     }
                 }
             })
@@ -50,7 +47,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return (
         <AuthContext.Provider value={{ user, status }}>
-            {status == 'authenticated' && <>{children}</>}
+            {children}
         </AuthContext.Provider>
     )
 }

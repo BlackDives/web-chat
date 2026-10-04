@@ -1,10 +1,10 @@
-import AuthProvider from '@/features/auth/auth-provider/auth-provider'
+import AuthenticatedRouteGuard from '@/features/auth/auth-provider/authenticated-route-guard'
 
 const Home = () => {
     return (
-        <AuthProvider>
-            <div>webchat home</div>
-        </AuthProvider>
+        <AuthenticatedRouteGuard>
+            <div className="flex flex-col">webchat home</div>
+        </AuthenticatedRouteGuard>
     )
 }
 
