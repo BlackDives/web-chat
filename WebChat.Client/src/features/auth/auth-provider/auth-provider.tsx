@@ -7,47 +7,52 @@ export type AuthProviderProps = {
 }
 
 export type AuthContextType = {
-    isAuthenticated: boolean
-    accessToken: string
+    user: AuthenticatedUser | null
+    status: AuthStatus
 }
 
 export type AuthenticatedUser = {
+    id: string
     username: string
     email: string
 }
 
+export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated'
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<AuthenticatedUser | null>(null)
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [status, setStatus] = useState<AuthStatus>('loading')
     const navigate = useNavigate()
-
-    const AuthContext = createContext<AuthContextType>({
-        isAuthenticated: false,
-        accessToken: '',
-    })
 
     useEffect(() => {
         axios
             .get('http://localhost:5003/api/users/me', {
                 withCredentials: true,
             })
-            .then((data) => {
-                console.log(data)
+            .then((res) => {
+                console.log(res)
+                const data: AuthenticatedUser = res.data
+                setUser(data)
             })
             .catch((err) => {
                 console.log(err)
+                if (axios.isAxiosError(err)) {
+                    if (err.response?.status === 401) {
+                        setUser(null)
+                        setStatus('authenticated')
+                        navigate('/auth/login')
+                    }
+                }
             })
     }, [])
 
-    const fetchUserDetails = async () => {
-        try {
-            const response = await axios.get('http://localhost:5003/user/me')
-
-            return response
-        } catch (error) {}
-    }
-
-    return <>{children}</>
+    return (
+        <AuthContext.Provider value={{ user, status }}>
+            {status == 'authenticated' && <>{children}</>}
+        </AuthContext.Provider>
+    )
 }
 
 export default AuthProvider

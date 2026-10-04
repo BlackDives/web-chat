@@ -269,6 +269,9 @@ public class AuthenticationController : ControllerBase
         var fetchedUser = await _userService.FindUserByEmailAsync(refreshTokenClaims.Email);
         var refreshedAccessToken = _jwtService.GenerateAccessToken(fetchedUser.Value);
         
+        var newAccessTokenClaimsResult = _jwtService.GetAccessTokenClaims(refreshedAccessToken.EncodedToken);
+        var newAccessTokenClaims = newAccessTokenClaimsResult.Value;
+        
         Response.Cookies.Append("AccessToken", refreshedAccessToken.EncodedToken, new CookieOptions
         {
             HttpOnly = true,
@@ -276,7 +279,7 @@ public class AuthenticationController : ControllerBase
             SameSite = SameSiteMode.Lax,
         });
 
-        return Ok();
+        return Ok(newAccessTokenClaims);
     }
     
 }

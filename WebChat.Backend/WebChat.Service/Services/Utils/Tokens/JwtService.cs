@@ -123,14 +123,22 @@ public class JwtService : IJwtService
         throw new NotImplementedException();
     }
 
-    public async Task<bool> IsTokenExpiredAsync(string token)
+    public Task<bool> IsTokenExpiredAsync(string token)
     {
-        var isExpired = await _tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters
+        if (string.IsNullOrWhiteSpace(token) || !_tokenHandler.CanReadToken(token))
         {
-            ValidateLifetime = true,
-        });
+            return Task.FromResult(true);
+        }
 
-        return !isExpired.IsValid;
+        try
+        {
+            var parsedToken = _tokenHandler.ReadJsonWebToken(token);
+            return Task.FromResult(parsedToken.ValidTo <= DateTime.UtcNow);
+        }
+        catch (ArgumentException)
+        {
+            return Task.FromResult(true);
+        }
     }
 
     public Result<AccessTokenClaims> GetAccessTokenClaims(string accessToken)

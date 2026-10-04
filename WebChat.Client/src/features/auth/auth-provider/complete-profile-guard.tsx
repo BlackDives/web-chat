@@ -12,7 +12,7 @@ const CompleteProfileGuard = ({ children }: CompleteProfileGuarProps) => {
 
     useEffect(() => {
         axios
-            .get('http://localhost:5003/api/users/complete-profile', {
+            .get('http://localhost:5003/api/auth/complete-profile', {
                 withCredentials: true,
             })
             .then((res) => {

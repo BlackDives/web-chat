@@ -1,5 +1,11 @@
+import AuthProvider from '@/features/auth/auth-provider/auth-provider'
+
 const Home = () => {
-    return <div>Welcome to WebChat home</div>
+    return (
+        <AuthProvider>
+            <div>webchat home</div>
+        </AuthProvider>
+    )
 }
 
 export default Home

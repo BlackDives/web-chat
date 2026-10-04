@@ -2,9 +2,11 @@ using System.IdentityModel.Tokens.Jwt;
 using WebChat.Infrastructure.DataAccess.Repositories.Channels;
 using WebChat.Infrastructure.DataAccess.Repositories.Friendships;
 using WebChat.Infrastructure.DataAccess.Repositories.Messages;
+using WebChat.Infrastructure.DataAccess.Repositories.RefreshTokens;
 using WebChat.Infrastructure.DataAccess.Repositories.Spaces;
 using WebChat.Infrastructure.DataAccess.Repositories.Users;
 using WebChat.Service.Services.Auth;
+using WebChat.Service.Services.Auth.Interfaces;
 using WebChat.Service.Services.Channels;
 using WebChat.Service.Services.Friendships;
 using WebChat.Service.Services.Messages;
@@ -28,6 +30,7 @@ internal static class WebChatServiceCollectionExtensions
         services.AddScoped<IFriendshipService, FriendshipService>();
         services.AddScoped<IGoogleAuthService, GoogleAuthService>();
         services.AddScoped<ICompleteProfileService, CompleteProfileService>();
+        services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<JwtSecurityTokenHandler>();
         
         return services;
@@ -41,6 +44,7 @@ internal static class WebChatServiceCollectionExtensions
         services.AddScoped<IChannelRepository, ChannelRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IFriendshipRepository, FriendshipRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         
         return services;
     }
